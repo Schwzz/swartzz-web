@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Schwzz | Bio</title>
+    <link rel="icon" type="image/jpeg" href="img/Shennz.jpg">
+
+    <!-- ================================================
+         FONTS & ICONS
+         - Bungee Inline : display name
+         - DM Mono       : all body text, labels, links
+         - Font Awesome  : social icons, controls
+    ================================================ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Bungee+Inline&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+
+        /* ================================================
+           DESIGN TOKENS
+        ================================================ */
+        :root {
+            --glass-border      : rgba(255, 255, 255, 0.10);
+            --glass-border-hover: rgba(255, 255, 255, 0.16);
+            --col-divider       : rgba(255, 255, 255, 0.09);
+            --muted             : #555;
+        }
+
+        /* ================================================
+           RESET
+        ================================================ */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ================================================
+           BODY & BACKGROUND
+           - A <video> element handles mp4 backgrounds
+           - hotelbg.gif is the fallback / default bg image
+           - JS swaps the source per track
+           - Dark overlay dims it for readability
+           - Grain texture adds film noise
+        ================================================ */
+        body {
+            font-family: 'DM Mono', monospace;
+            background: #060608;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ================================================
+           BACKGROUND MEDIA LAYER
+           Two video slots (A/B) crossfade for smooth transitions.
+           GIF layer sits beneath both.
+        ================================================ */
+        .bg-layer {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center center;
+            z-index: -1;
+            opacity: 0;
+            filter: brightness(0.82) saturate(0.92);
+            transition: opacity 1.2s ease;
+            pointer-events: none;
+        }
+
+        /* Anime.mp4 — zoomed out + shifted to show head & thighs */
+        .bg-layer.anime-bg {
+            object-fit: contain;
+            object-position: center center;
+            background: #060608;
+            transform: scale(1.1);
+        }
+
+        .bg-layer.visible { opacity: 1; }
+
+        #bgGif {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: #060608 center center / cover no-repeat;
+            z-index: -2;
+            opacity: 0;
+            filter: brightness(0.82) saturate(0.92);
+            transition: opacity 1.2s ease;
+        }
+
+        #bgGif.visible { opacity: 1; }
+
+        /* hiyuki.gif — cover sizing, shifted to better frame the scene */
+        #bgGif.hiyuki-bg {
+            background-size: cover;
+            background-position: center 30%;
+            background-color: #060608;
+            filter: none;
+        }
+
+        #bgImg.hiyuki-bg {
+            filter: none;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.42);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* ================================================
+           VIGNETTE — dark edges fading to black, spotlight effect
+        ================================================ */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.85) 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+
+
+        /* ================================================
+           CREDIT WATERMARK — bottom-right
+           Hacker effect runs on the "Swartzz" span
+        ================================================ */
+        .credit {
+            position: fixed;
+            bottom: 16px;
+            right: 20px;
+            z-index: 10;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.28);
+            letter-spacing: 1px;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        @media (max-width: 768px) {
+            .credit {
+                bottom: 10px;
+                right: 12px;
+                font-size: 0.58rem;
+                color: rgba(255, 255, 255, 0.6);
+                z-index: 200;
+            }
+        }
+
+        #creditName {
+            display: inline;
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        /* ================================================
+           MAIN CARD
+           perspective set on body so 3D tilt works
+        ================================================ */
+        body {
+            perspective: 1200px;
+        }
+
+        .profile-card {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 0;
+            width: auto;
+            background: rgba(12, 12, 15, 0.58);
+            backdrop-filter: blur(12px) saturate(130%);
+            -webkit-backdrop-filter: blur(12px) saturate(130%);
+            border-radius: 18px;
+            border: 1px solid var(--glass-border);
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.04) inset,
+                0 20px 50px rgba(0,0,0,0.55),
+                0 6px 16px rgba(0,0,0,0.3);
+            transition: box-shadow 0.6s ease, border-color 0.6s ease,
+                        opacity 0.8s ease 0.2s;
+            overflow: hidden;
+            will-change: transform;
+            transform-style: preserve-3d;
+        }
+
+        .profile-card:hover {
+            border-color: rgba(255,255,255,0.13);
+        }
+
+        /* ================================================
+           CURSOR PROXIMITY GLOW — via border highlight
+        ================================================ */
+        .profile-card {
+            --glow-x: -999px;
+            --glow-y: -999px;
+            --glow-op: 0;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(
+                    350px circle at var(--glow-x) var(--glow-y),
+                    rgba(255,255,255,var(--glow-op)),
+                    transparent 60%
+                ),
+                linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.18) 50%, transparent 90%) top / 80% 1px no-repeat;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* ================================================
+           SCANLINE OVERLAY — static CRT texture
+           Pure CSS, zero performance cost
+        ================================================ */
+        .profile-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 2px,
+                rgba(0,0,0,0.06) 2px,
+                rgba(0,0,0,0.06) 4px
+            );
+            pointer-events: none;
+            z-index: 3;
+            border-radius: 18px;
+        }
+
+        /* ================================================
+           LEFT COLUMN — name, pills, social links
+        ================================================ */
+        .info-col {
+            flex: 1.35;
+            min-width: 200px;
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            border-right: 1px solid var(--col-divider);
+        }
+
+        .header-area { margin-bottom: 16px; }
+
+        /* Display name — Bungee Inline font with breathing glow */
+        .display-name {
+            font-family: 'Bungee Inline', cursive;
+            font-size: 1.45rem;
+            font-weight: 400;
+            color: #ffffff;
+            letter-spacing: 1px;
+            line-height: 1;
+            animation: nameGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes nameGlow {
+            0%, 100% {
+                text-shadow:
+                    0 0 20px rgba(255,255,255,0.5),
+                    0 0 40px rgba(255,255,255,0.2);
+            }
+            50% {
+                text-shadow:
+                    0 0 30px rgba(255,255,255,0.9),
+                    0 0 60px rgba(255,255,255,0.45),
+                    0 0 100px rgba(255,255,255,0.2);
+            }
+        }
+
+        /* Subtitle */
+        .sub-header {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.55rem;
+            color: #888;
+            margin-top: 5px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* Status pills row — single line, no wrapping */
+        .pills-row {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 5px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .status-pill {
+            display: inline-block;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.58rem;
+            font-weight: 500;
+            color: #999;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.10);
+            padding: 2px 9px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* Live Manila clock — with separator lines above and below */
+        .live-clock {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.62rem;
+            color: #888;
+            letter-spacing: 1.5px;
+            margin-top: 8px;
+            padding: 6px 0;
+            border-top: 1px solid rgba(255,255,255,0.18);
+            border-bottom: 1px solid rgba(255,255,255,0.18);
+        }
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.07), transparent);
+            margin-bottom: 14px;
+        }
+
+        /* "FIND ME" label */
+        .links-panel-label {
+            font-size: 0.6rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        /* ================================================
+           SOCIAL LINKS
+        ================================================ */
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #999;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.8rem;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            transition: color 0.25s, border-color 0.25s, transform 0.25s;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            margin-bottom: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.04);
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
+        .social-link:hover::before { opacity: 1; }
+        .social-link:hover {
+            color: #e8e8e8;
+            border-color: rgba(255,255,255,0.08);
+            transform: translateX(4px);
+        }
+
+        .social-link .icon-wrap {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            transition: background 0.25s;
+        }
+
+        .social-link:hover .icon-wrap { background: rgba(255,255,255,0.1); }
+
+        .social-link .arrow {
+            margin-left: auto;
+            font-size: 0.6rem;
+            color: #444;
+            opacity: 0;
+            transform: translateX(-4px);
+            transition: opacity 0.25s, transform 0.25s;
+        }
+
+        .social-link:hover .arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ================================================
+           STEAM COPY TOOLTIP
+        ================================================ */
+        .copy-toast {
+            position: fixed;
+            pointer-events: none;
+            background: rgba(20, 20, 22, 0.95);
+            border: 1px solid rgba(255,255,255,0.14);
+            color: #d0d0d0;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.68rem;
+            letter-spacing: 1px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            white-space: nowrap;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px);
+            opacity: 0;
+            transform: translateY(6px) scale(0.95);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 9999;
+        }
+
+        .copy-toast.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .copy-toast::before {
+            content: '✓ ';
+            color: rgba(180,255,180,0.8);
+        }
+
+        /* ================================================
+           RIGHT COLUMN — music player only
+        ================================================ */
+        .display-col {
+            flex: 1;
+            min-width: 170px;
+            padding: 16px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 0;
+            position: relative;
+            cursor: default;
+        }
+
+        /* ================================================
+           FADE ANIMATION
+        ================================================ */
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.35s ease forwards; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0);   }
+        }
+
+        /* ================================================
+           MUSIC VIEW
+        ================================================ */
+        .music-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* ================================================
+           VINYL DISC — replaces equalizer bars
+           Speed controlled via --spin-dur CSS variable
+           set by JS based on play/pause state
+        ================================================ */
+        .vinyl-wrap {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            margin-bottom: 16px;
+            flex-shrink: 0;
+        }
+
+        .vinyl-disc {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 50% 50%, #1e1e1e 18%, transparent 19%),
+                radial-gradient(circle at 50% 50%, #252525 19%, transparent 20%),
+                repeating-radial-gradient(circle at 50% 50%,
+                    #0e0e0e 0px, #0e0e0e 2px,
+                    #181818 3px, #181818 5px,
+                    #121212 6px, #121212 8px
+                );
+            border: 5px solid #1a1a1a;
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.06),
+                0 10px 30px rgba(0,0,0,0.8),
+                inset 0 0 20px rgba(0,0,0,0.6);
+            animation: vinylSpin var(--spin-dur, 6s) linear infinite;
+            transition: animation-duration 1.2s ease;
+            will-change: transform;
+        }
+
+        /* Center label */
+        .vinyl-label {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 35%, #2a2a2a, #111);
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 8px rgba(0,0,0,0.8);
+        }
+
+        /* Tiny center hole */
+        .vinyl-label::after {
+            content: '';
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #060608;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Highlight sheen that rotates with disc */
+        .vinyl-disc::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: linear-gradient(
+                135deg,
+                rgba(255,255,255,0.07) 0%,
+                transparent 40%,
+                transparent 60%,
+                rgba(255,255,255,0.03) 100%
+            );
+            pointer-events: none;
+        }
+
+        @keyframes vinylSpin {
+            from { transform: rotate(0deg);   }
+            to   { transform: rotate(360deg); }
+        }
+
+        /* Paused: slow to a crawl via very long duration (set by JS) */
+
+        /* "NOW PLAYING" label */
+        .now-playing-label {
+            font-size: 0.52rem;
+            color: #666;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        /* Track name — scrolling ticker for long titles */
+        .track-ticker {
+            width: 180px;
+            overflow: hidden;
+            margin-bottom: 14px;
+            position: relative;
+            text-align: center;
+        }
+
+        /* Fade edges only shown when scrolling */
+        .track-ticker.is-scrolling::before,
+        .track-ticker.is-scrolling::after {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 16px;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .track-ticker.is-scrolling::before {
+            left: 0;
+            background: linear-gradient(to right, rgba(12,12,15,0.95), transparent);
+        }
+        .track-ticker.is-scrolling::after {
+            right: 0;
+            background: linear-gradient(to left, rgba(12,12,15,0.95), transparent);
+        }
+
+        .track-name {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #ccc;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .track-name.scrolling {
+            animation: tickerScroll var(--scroll-dur, 8s) linear infinite;
+        }
+
+        @keyframes tickerScroll {
+            0%   { transform: translateX(0); }
+            15%  { transform: translateX(0); }
+            85%  { transform: translateX(var(--scroll-dist, -100px)); }
+            100% { transform: translateX(var(--scroll-dist, -100px)); }
+        }
+
+        /* Playback control buttons */
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .ctrl-btn {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.04);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--muted);
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ctrl-btn:hover { background: rgba(255,255,255,0.1); color: #ddd; }
+
+        .ctrl-btn.play {
+            width: 36px; height: 36px;
+            background: rgba(255,255,255,0.09);
+            border-color: rgba(255,255,255,0.15);
+            color: #eee;
+            font-size: 0.75rem;
+        }
+
+        .ctrl-btn.play:hover {
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            width: 100%;
+            margin-top: 14px;
+            padding: 0 4px;
+        }
+
+        .progress-track {
+            height: 2px;
+            background: rgba(255,255,255,0.07);
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 0%;
+            background: rgba(255,255,255,0.35);
+            border-radius: 2px;
+            transition: width 0.3s linear;
+        }
+
+        .progress-times {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.58rem;
+            color: #666;
+        }
+
+        /* ================================================
+           VOLUME SLIDER
+        ================================================ */
+        .volume-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            margin-top: 12px;
+            padding: 0 4px;
+        }
+
+        .volume-icon {
+            font-size: 0.65rem;
+            color: #555;
+            flex-shrink: 0;
+            width: 14px;
+            text-align: center;
+        }
+
+        .volume-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            flex: 1;
+            height: 2px;
+            background: rgba(255,255,255,0.07);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+            /* Custom filled track via JS background-size trick */
+            background-image: linear-gradient(rgba(255,255,255,0.35), rgba(255,255,255,0.35));
+            background-repeat: no-repeat;
+            background-size: 50% 100%; /* default 50% = 0.5 volume */
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.85);
+            box-shadow: 0 0 6px rgba(255,255,255,0.4);
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover { transform: scale(1.3); }
+
+        .volume-slider::-moz-range-thumb {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.85);
+            border: none;
+            cursor: pointer;
+        }
+
+        .volume-pct {
+            font-size: 0.55rem;
+            color: #555;
+            min-width: 26px;
+            text-align: right;
+        }
+
+        /* ================================================
+           MOBILE — full responsive layout
+        ================================================ */
+        @media (max-width: 768px) {
+            html {
+                -webkit-text-size-adjust: 100%;
+                text-size-adjust: 100%;
+            }
+
+            body {
+                align-items: flex-start;
+                padding: 16px 0;
+                min-height: 100svh;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+
+            /* Card goes full width, stacks vertically */
+            .profile-card {
+                flex-direction: column;
+                width: 92vw;
+                max-width: 480px;
+                margin: 0 auto;
+            }
+
+            /* Left column full width, bottom border instead of right */
+            .info-col {
+                min-width: unset;
+                width: 100%;
+                padding: 20px 22px;
+                border-right: none;
+                border-bottom: 1px solid var(--col-divider);
+            }
+
+            /* Right column full width */
+            .display-col {
+                min-width: unset;
+                width: 100%;
+                padding: 20px 22px;
+            }
+
+            /* Smaller name on mobile */
+            .display-name { font-size: 1.6rem; }
+
+            /* Pills can wrap on mobile */
+            .pills-row { flex-wrap: wrap; }
+
+            /* Bigger tap targets for social links */
+            .social-link { padding: 11px 10px; }
+
+            /* Bigger control buttons for fingers */
+            .ctrl-btn      { width: 44px; height: 44px; font-size: 0.85rem; }
+            .ctrl-btn.play { width: 52px; height: 52px; font-size: 0.95rem; }
+
+            /* Bigger volume slider thumb */
+            .volume-slider::-webkit-slider-thumb {
+                width: 18px;
+                height: 18px;
+            }
+
+            /* Vinyl slightly smaller on mobile */
+            .vinyl-wrap  { width: 100px; height: 100px; }
+            .vinyl-disc  { width: 100px; height: 100px; }
+
+            /* Track ticker wider on mobile */
+            .track-ticker { width: 220px; }
+
+            /* Lock screen hint text smaller */
+            .lock-hint { font-size: 0.65rem; }
+
+            /* Credit text smaller */
+            .credit { font-size: 0.52rem; }
+
+            /* Disable 3D tilt on touch — tilt JS already checks hover:hover
+               but this ensures no transform weirdness on scroll */
+            .profile-card { transform: none !important; }
+
+            /* Vignette less aggressive on small screens */
+            body::after {
+                background: radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.7) 100%);
+            }
+        }
+
+        /* Extra small phones */
+        @media (max-width: 380px) {
+            .profile-card   { width: 96vw; }
+            .info-col       { padding: 16px 16px; }
+            .display-col    { padding: 16px 16px; }
+            .display-name   { font-size: 1.35rem; }
+            .status-pill    { font-size: 0.52rem; padding: 2px 7px; }
+            .social-link    { font-size: 0.75rem; }
+            .track-ticker   { width: 180px; }
+        }
+
+        /* ================================================
+           LOCK SCREEN
+        ================================================ */
+        #lockScreen {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            cursor: pointer;
+            backdrop-filter: blur(28px) brightness(0.45);
+            -webkit-backdrop-filter: blur(28px) brightness(0.45);
+            background: rgba(0, 0, 0, 0.55);
+            transition: opacity 0.9s ease;
+        }
+
+        #lockScreen.unlocking {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .lock-wrap {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lock-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -14px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.12);
+            animation: pulseRing 2.4s ease-out infinite;
+        }
+
+        .lock-wrap::after {
+            content: '';
+            position: absolute;
+            inset: -28px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.05);
+            animation: pulseRing 2.4s ease-out 0.6s infinite;
+        }
+
+        @keyframes pulseRing {
+            0%   { transform: scale(0.85); opacity: 0.7; }
+            70%  { transform: scale(1.15); opacity: 0;   }
+            100% { transform: scale(1.15); opacity: 0;   }
+        }
+
+        .lock-icon {
+            font-size: 2rem;
+            color: rgba(255,255,255,0.85);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.4s ease;
+            filter: drop-shadow(0 0 18px rgba(255,255,255,0.25));
+        }
+
+        .lock-icon.open {
+            transform: translateY(-6px) rotate(-15deg);
+            color: #ffffff;
+            filter: drop-shadow(0 0 28px rgba(255,255,255,0.7))
+                    drop-shadow(0 0 60px rgba(255,255,255,0.3));
+        }
+
+        .lock-hint {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: hintPulse 3s ease-in-out infinite;
+            transition: opacity 0.4s;
+        }
+
+        .lock-hint.hide { opacity: 0; }
+
+        @keyframes hintPulse {
+            0%, 100% { opacity: 0.35; }
+            50%       { opacity: 0.65; }
+        }
+
+        /* Card hidden until unlocked */
+        .profile-card {
+            opacity: 0;
+            transform: translateY(14px) scale(0.98);
+            transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+        }
+
+        .profile-card.revealed {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* One-shot shimmer sweep after card reveals */
+        .profile-card.shimmer::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -60%;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(
+                105deg,
+                transparent 20%,
+                rgba(255,255,255,0.07) 50%,
+                transparent 80%
+            );
+            animation: shimmerSweep 0.9s ease forwards;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        @keyframes shimmerSweep {
+            from { left: -60%; }
+            to   { left: 120%; }
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- ================================================
+     BACKGROUND MEDIA — A/B crossfade system
+================================================ -->
+<video id="bgA" class="bg-layer" autoplay muted loop playsinline></video>
+<video id="bgB" class="bg-layer" autoplay muted loop playsinline></video>
+<div   id="bgGif"></div>
+<img   id="bgImg" class="bg-layer" src="" alt="" style="object-fit:cover; object-position:center center; filter:brightness(0.82) saturate(0.92);">
+
+<!-- ================================================
+     LOCK SCREEN
+================================================ -->
+<div id="lockScreen">
+    <div class="lock-wrap">
+        <i class="fas fa-lock lock-icon" id="lockIcon"></i>
+    </div>
+    <p class="lock-hint" id="lockHint">Unlock</p>
+</div>
+
+<!-- ================================================
+     CREDIT — bottom-right corner
+     "Swartzz" gets the hacker scramble effect
+================================================ -->
+<p class="credit">Created by: <span id="creditName">Swartzz</span></p>
+
+
+<!-- ================================================
+     MAIN PROFILE CARD
+================================================ -->
+<div class="profile-card">
+
+    <!-- ============================================
+         LEFT COLUMN
+    ============================================ -->
+    <div class="info-col">
+
+        <!-- Name / subtitle / pills -->
+        <div class="header-area">
+            <h1 class="display-name">Schwzz</h1>
+            <p class="sub-header">Make it work good, then make it look good</p>
+            <div class="pills-row">
+                <span class="status-pill">LazyDeveloper</span>
+                <span class="status-pill">Editor</span>
+                <span class="status-pill">Exhausted</span>
+            </div>
+            <p class="live-clock" id="liveClock"></p>
+        </div>
+
+        <div class="divider"></div>
+
+        <p class="links-panel-label">Find Me</p>
+
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/channel/UCMPiqPQdim5tt1aq9fnfa-g?sub_confirmation=1"
+           target="_blank" rel="noopener" class="social-link" id="link-yt">
+            <span class="icon-wrap"><i class="fab fa-youtube"></i></span>
+            YouTube
+            <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+        </a>
+
+        <!-- Spotify -->
+        <a href="https://open.spotify.com/user/31dyy3jgd53qyxslq7umx5oaneei?si=d4622ecc709a4e18"
+           target="_blank" rel="noopener" class="social-link" id="link-sp">
+            <span class="icon-wrap"><i class="fab fa-spotify"></i></span>
+            Spotify
+            <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+        </a>
+
+        <!-- GitHub -->
+        <a href="https://github.com/Schwzz"
+           target="_blank" rel="noopener" class="social-link" id="link-gh">
+            <span class="icon-wrap"><i class="fab fa-github"></i></span>
+            GitHub
+            <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+        </a>
+
+        <!-- Modrinth -->
+        <a href="https://modrinth.com/user/Swartzz"
+           target="_blank" rel="noopener" class="social-link" id="link-mr">
+            <span class="icon-wrap" style="font-family:'DM Mono',monospace; font-weight:700; font-size:0.9rem; color:currentColor;">M</span>
+            Modrinth
+            <span class="arrow"><i class="fas fa-arrow-right"></i></span>
+        </a>
+
+        <!-- Steam — copies friend code -->
+        <div class="social-link" onclick="copySteamCode(event)" id="steamBtn">
+            <span class="icon-wrap"><i class="fab fa-steam"></i></span>
+            Steam
+            <span class="arrow" style="opacity:1; transform:none; color:#444; font-size:0.58rem;">COPY ID</span>
+        </div>
+
+    </div><!-- /info-col -->
+
+
+    <!-- ============================================
+         RIGHT COLUMN — music player
+    ============================================ -->
+    <div class="display-col">
+
+        <div id="musicView" class="music-view fade-in">
+
+            <!-- ======================================
+                 AUDIO ELEMENTS
+                 Add more songs here — same format.
+                 The JS playlist array below must match.
+            ====================================== -->
+            <audio id="audioPlayer" preload="auto"></audio>
+
+            <!-- Vinyl disc — spins while playing, slows when paused -->
+            <div class="vinyl-wrap">
+                <div class="vinyl-disc" id="vinylDisc"></div>
+                <div class="vinyl-label"></div>
+            </div>
+
+            <p class="now-playing-label">Now Playing</p>
+            <div class="track-ticker">
+                <p class="track-name" id="trackName">—</p>
+            </div>
+
+            <!-- Controls: prev track · play/pause · next track -->
+            <div class="controls">
+                <div class="ctrl-btn" onclick="prevTrack()">
+                    <i class="fas fa-step-backward"></i>
+                </div>
+                <div class="ctrl-btn play" id="playBtn" onclick="togglePlay()">
+                    <i class="fas fa-play" id="playIcon"></i>
+                </div>
+                <div class="ctrl-btn" onclick="nextTrack()">
+                    <i class="fas fa-step-forward"></i>
+                </div>
+            </div>
+
+            <!-- Progress bar + timestamps -->
+            <div class="progress-bar">
+                <div class="progress-track" id="progressTrack" onclick="seekTo(event)">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-times">
+                    <span id="currentTime">0:00</span>
+                    <span id="totalTime">—:——</span>
+                </div>
+            </div>
+
+            <!-- Volume slider — default 50%, range 0–100% -->
+            <div class="volume-row">
+                <i class="fas fa-volume-down volume-icon"></i>
+                <input type="range" class="volume-slider" id="volumeSlider"
+                       min="0" max="100" value="100">
+                <i class="fas fa-volume-up volume-icon"></i>
+                <span class="volume-pct" id="volumePct">50%</span>
+            </div>
+
+        </div><!-- /musicView -->
+
+    </div><!-- /display-col -->
+
+</div><!-- /profile-card -->
+
+
+<!-- ================================================
+     JAVASCRIPT
+================================================ -->
+<script>
+
+    /* -----------------------------------------------
+       PLAYLIST
+       bg: { type: 'video'|'gif', src: 'path' }
+    ----------------------------------------------- */
+    const PLAYLIST = [
+        {
+            src  : 'mp3/MONTAGEM ALQUIMIA.mp3',
+            title: 'MONTAGEM ALQUIMIA',
+            bg   : { type: 'video', src: 'mp4/car.mp4' }
+        },
+        {
+            src  : 'mp3/fallin for you.mp3',
+            title: 'Fallin For You',
+            bg   : { type: 'video', src: 'mp4/girl.mp4' }
+        },
+        {
+            src  : 'mp3/BREEZE.mp3',
+            title: 'BREEZE',
+            bg   : { type: 'video', src: 'mp4/TLOF.mp4' }
+        },
+        // Add more: { src: 'mp3/song.mp3', title: 'Title', bg: { type: 'video', src: 'mp4/bg.mp4' } }
+    ];
+
+    let trackIndex = 0;
+
+    /* -----------------------------------------------
+       MUSIC PLAYER
+    ----------------------------------------------- */
+    const audio         = document.getElementById('audioPlayer');
+    const playIcon      = document.getElementById('playIcon');
+    const vinylDisc     = document.getElementById('vinylDisc');
+    const progressFill  = document.getElementById('progressFill');
+    const currentTimeEl = document.getElementById('currentTime');
+    const totalTimeEl   = document.getElementById('totalTime');
+    const trackNameEl   = document.getElementById('trackName');
+
+    let isPlaying = false;
+
+    // Format seconds → "m:ss"
+    function fmtTime(s) {
+        if (!s || isNaN(s)) return '0:00';
+        const m   = Math.floor(s / 60);
+        const sec = Math.floor(s % 60);
+        return `${m}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    // Sync UI to playing state — vinyl speeds up / slows down
+    function setPlaying(state) {
+        isPlaying          = state;
+        playIcon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
+        // Playing: normal speed. Paused: very slow crawl (feels like it's winding down)
+        vinylDisc.style.setProperty('--spin-dur', isPlaying ? '6s' : '40s');
+    }
+
+    // Background A/B crossfade elements
+    const bgA   = document.getElementById('bgA');
+    const bgB   = document.getElementById('bgB');
+    const bgGif = document.getElementById('bgGif');
+    const bgImg = document.getElementById('bgImg');
+    let   activeBg = 'A';
+
+    // Crossfade to new background — fades old out while new fades in
+    function setBackground(bg) {
+        if (bg.type === 'video') {
+            const next = activeBg === 'A' ? bgB : bgA;
+            const prev = activeBg === 'A' ? bgA : bgB;
+
+            next.src = bg.src;
+            next.load();
+            next.play().catch(() => {});
+            next.classList.toggle('anime-bg', bg.src.includes('Anime.mp4'));
+            next.classList.remove('hiyuki-bg');
+            next.classList.add('visible');
+            prev.classList.remove('visible');
+            bgGif.classList.remove('visible');
+            bgImg.classList.remove('visible');
+            bgImg.classList.remove('hiyuki-bg');
+
+            activeBg = activeBg === 'A' ? 'B' : 'A';
+        } else if (bg.src.includes('hiyuki.gif')) {
+            // hiyuki — use <img> so object-fit/object-position work properly
+            bgA.classList.remove('visible');
+            bgB.classList.remove('visible');
+            bgGif.classList.remove('visible');
+            bgImg.src = bg.src;
+            // Tweak object-position here: "center top" shows top of scene
+            // "center 20%" shifts down slightly, "center 40%" more, etc.
+            bgImg.style.objectPosition = 'center 20%';
+            bgImg.classList.add('hiyuki-bg');
+            bgImg.classList.add('visible');
+        } else {
+            // Regular GIF (hotelbg etc)
+            bgA.classList.remove('visible');
+            bgB.classList.remove('visible');
+            bgImg.classList.remove('visible');
+            bgImg.classList.remove('hiyuki-bg');
+            bgGif.style.backgroundImage = `url('${bg.src}')`;
+            bgGif.classList.toggle('hiyuki-bg', bg.src.includes('hiyuki.gif'));
+            bgGif.classList.add('visible');
+        }
+    }
+
+    // Load a track by index and optionally autoplay
+    function loadTrack(index, play) {
+        const t = PLAYLIST[index];
+        audio.src = t.src;
+        trackNameEl.textContent   = t.title;
+        progressFill.style.width  = '0%';
+        currentTimeEl.textContent = '0:00';
+        totalTimeEl.textContent   = '—:——';
+        setBackground(t.bg);
+        // Update browser tab title with track name
+        document.title = 'Schwzz | ' + t.title;
+        // Trigger ticker scroll if title overflows
+        requestAnimationFrame(updateTicker);
+        if (play) audio.play().then(() => setPlaying(true)).catch(() => {});
+    }
+
+    /* -----------------------------------------------
+       VOLUME SLIDER
+       Default 100% (audio.volume = 1.0)
+       Range input updates audio volume + fills track
+    ----------------------------------------------- */
+    const volSlider = document.getElementById('volumeSlider');
+    const volPct    = document.getElementById('volumePct');
+
+    audio.volume = 1.0; // default 100%
+
+    function updateVolume(val) {
+        audio.volume = val / 100;
+        volPct.textContent = val + '%';
+        // Fill the track left of thumb with white
+        volSlider.style.backgroundSize = val + '% 100%';
+        // Swap icon to muted if 0
+        const icon = volSlider.previousElementSibling;
+        icon.className = val == 0
+            ? 'fas fa-volume-mute volume-icon'
+            : val < 50
+                ? 'fas fa-volume-down volume-icon'
+                : 'fas fa-volume-up volume-icon';
+    }
+
+    volSlider.addEventListener('input', () => updateVolume(parseInt(volSlider.value)));
+    updateVolume(100); // init fill at 100%
+
+    // Go to previous track
+    function prevTrack() {
+        trackIndex = (trackIndex - 1 + PLAYLIST.length) % PLAYLIST.length;
+        loadTrack(trackIndex, isPlaying);
+    }
+
+    // Go to next track (also fires automatically when a track ends)
+    function nextTrack() {
+        trackIndex = (trackIndex + 1) % PLAYLIST.length;
+        loadTrack(trackIndex, isPlaying);
+    }
+
+    // Auto-advance when track ends
+    audio.addEventListener('ended', nextTrack);
+
+    // Live progress bar + timestamp updates
+    audio.addEventListener('timeupdate', () => {
+        const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+        progressFill.style.width  = pct + '%';
+        currentTimeEl.textContent = fmtTime(audio.currentTime);
+        totalTimeEl.textContent   = fmtTime(audio.duration);
+    });
+
+    audio.addEventListener('loadedmetadata', () => {
+        totalTimeEl.textContent = fmtTime(audio.duration);
+    });
+
+    // Toggle play / pause
+    function togglePlay() {
+        if (isPlaying) {
+            audio.pause();
+            setPlaying(false);
+        } else {
+            audio.play().then(() => setPlaying(true)).catch(() => {});
+        }
+    }
+
+    // Seek ±10 seconds (still usable by clicking progress bar area)
+    function seekBack()    { audio.currentTime = Math.max(0, audio.currentTime - 10); }
+    function seekForward() { audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 10); }
+
+    // Click progress bar to seek
+    function seekTo(e) {
+        const rect  = document.getElementById('progressTrack').getBoundingClientRect();
+        const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        audio.currentTime = ratio * (audio.duration || 0);
+    }
+
+    // Load first track (no autoplay yet — unlock handles that)
+    vinylDisc.style.setProperty('--spin-dur', '40s'); // slow before unlock
+    loadTrack(trackIndex, false);
+
+
+    /* -----------------------------------------------
+       HOVER SOUND EFFECT
+       Plays a subtle tick on every social link hover.
+       Audio object is reused (reset each time) so rapid
+       hovers don't queue up or sound delayed.
+    ----------------------------------------------- */
+    const hoverSfx = new Audio('mp3/click sound.mp3');
+    hoverSfx.volume = 0.25; // quiet — adjust 0.0–1.0
+
+    document.querySelectorAll('.social-link').forEach(link => {
+        link.addEventListener('mouseenter', () => {
+            hoverSfx.currentTime = 0;
+            hoverSfx.play().catch(() => {});
+        });
+    });
+
+
+    /* -----------------------------------------------
+       LOCK SCREEN UNLOCK SEQUENCE
+    ----------------------------------------------- */
+    let unlocked = false;
+
+    function unlock() {
+        if (unlocked) return;
+        unlocked = true;
+
+        const lockScreen = document.getElementById('lockScreen');
+        const lockIcon   = document.getElementById('lockIcon');
+        const lockHint   = document.getElementById('lockHint');
+        const card       = document.querySelector('.profile-card');
+
+        // Swap to open lock + glow
+        lockIcon.classList.remove('fa-lock');
+        lockIcon.classList.add('fa-lock-open', 'open');
+        lockHint.classList.add('hide');
+
+        // Click sound
+        const clickSfx = new Audio('mp3/click sound.mp3');
+        clickSfx.play().catch(() => {});
+
+        // Start music
+        audio.play().then(() => setPlaying(true)).catch(() => {});
+
+        // Fade overlay
+        setTimeout(() => lockScreen.classList.add('unlocking'), 480);
+
+        // Remove overlay + reveal card + shimmer sweep
+        setTimeout(() => {
+            lockScreen.style.display = 'none';
+            card.classList.add('revealed');
+            setTimeout(() => {
+                card.classList.add('shimmer');
+                setTimeout(() => card.classList.remove('shimmer'), 950);
+            }, 300);
+        }, 1380);
+    }
+
+    window.addEventListener('click', unlock, { once: true });
+
+
+    /* -----------------------------------------------
+       HACKER TEXT EFFECT — on "Swartzz" credit text
+       Fires every 7 seconds
+    ----------------------------------------------- */
+    const creditEl    = document.getElementById('creditName');
+    const CREDIT_ORIG = 'Swartzz';
+    const HACK_CHARS  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&!?';
+    const HACK_SPEED  = 75;  // ms per tick — comfortable speed
+    const HACK_LAG    = 5;   // ticks before each letter locks (~2.5s total)
+
+    function creditHack() {
+        let iteration = 0;
+        clearInterval(creditEl._interval);
+
+        creditEl._interval = setInterval(() => {
+            creditEl.textContent = CREDIT_ORIG
+                .split('')
+                .map((char, i) => {
+                    if (i < Math.floor(iteration / HACK_LAG)) return char;
+                    return HACK_CHARS[Math.floor(Math.random() * HACK_CHARS.length)];
+                })
+                .join('');
+
+            if (iteration >= CREDIT_ORIG.length * HACK_LAG) {
+                clearInterval(creditEl._interval);
+                creditEl.textContent = CREDIT_ORIG;
+            }
+            iteration++;
+        }, HACK_SPEED);
+    }
+
+    setTimeout(() => {
+        creditHack();
+        setInterval(creditHack, 7000);
+    }, 3000);
+
+
+    /* -----------------------------------------------
+       STEAM CLIPBOARD
+    ----------------------------------------------- */
+    const toast = document.createElement('div');
+    toast.className   = 'copy-toast';
+    toast.textContent = 'Copied! 829327250';
+    document.body.appendChild(toast);
+
+    let toastTimer;
+
+    function copySteamCode(e) {
+        navigator.clipboard.writeText('829327250').catch(() => {
+            const ta = document.createElement('textarea');
+            ta.value = '829327250';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+        });
+
+        toast.style.left = (e.clientX + 12) + 'px';
+        toast.style.top  = (e.clientY - 36) + 'px';
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+    /* -----------------------------------------------
+       LIVE CLOCK — Manila timezone (Asia/Manila)
+       Updates every second
+    ----------------------------------------------- */
+    const clockEl = document.getElementById('liveClock');
+
+    function updateClock() {
+        const now = new Date().toLocaleTimeString('en-US', {
+            timeZone   : 'Asia/Manila',
+            hour       : '2-digit',
+            minute     : '2-digit',
+            second     : '2-digit',
+            hour12     : true
+        });
+        clockEl.textContent = '📍 TimeZone • ' + now;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+
+    /* -----------------------------------------------
+       TRACK TICKER — scrolls long titles left↔right
+       Called every time a new track loads
+    ----------------------------------------------- */
+    function updateTicker() {
+        const ticker = trackNameEl.parentElement;
+        const nameW  = trackNameEl.scrollWidth;
+        const boxW   = ticker.clientWidth;
+
+        // Reset
+        trackNameEl.classList.remove('scrolling');
+        ticker.classList.remove('is-scrolling');
+        trackNameEl.style.removeProperty('--scroll-dist');
+        trackNameEl.style.removeProperty('--scroll-dur');
+        trackNameEl.style.transform = 'translateX(0)';
+
+        if (nameW > boxW) {
+            // Long title — scroll it
+            const dist = nameW - boxW + 20;
+            const dur  = Math.max(5, dist / 30) + 's';
+            trackNameEl.style.setProperty('--scroll-dist', `-${dist}px`);
+            trackNameEl.style.setProperty('--scroll-dur',  dur);
+            ticker.classList.add('is-scrolling');
+            setTimeout(() => trackNameEl.classList.add('scrolling'), 800);
+        }
+        // Short title — stays centered naturally via text-align: center
+    }
+
+
+    /* -----------------------------------------------
+       KEYBOARD SHORTCUTS
+       Space    = play / pause
+       ←        = previous track
+       →        = next track
+    ----------------------------------------------- */
+    document.addEventListener('keydown', (e) => {
+        // Don't fire if user is typing in an input
+        if (e.target.tagName === 'INPUT') return;
+
+        if (e.code === 'Space') {
+            e.preventDefault(); // stop page scroll
+            togglePlay();
+        } else if (e.code === 'ArrowLeft') {
+            e.preventDefault();
+            prevTrack();
+        } else if (e.code === 'ArrowRight') {
+            e.preventDefault();
+            nextTrack();
+        }
+    });
+    /* -----------------------------------------------
+       3D CARD TILT
+       Card rotates in 3D following the mouse.
+       - Max tilt: 12 degrees on each axis
+       - Smooth spring back to flat on mouse leave
+       - Glare highlight shifts with tilt direction
+       - Disabled on mobile (touch devices)
+    ----------------------------------------------- */
+    const tiltCard = document.querySelector('.profile-card');
+
+    // Only run on non-touch devices
+    if (window.matchMedia('(hover: hover)').matches) {
+
+        let entryTimer = null;
+        let isEntering = false;
+
+        // When cursor enters, flag that we're in the ease-in phase
+        tiltCard.addEventListener('mouseenter', () => {
+            isEntering = true;
+            tiltCard.style.transition = 'transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.6s ease';
+            // After 400ms the ease-in is done — switch to instant tracking
+            clearTimeout(entryTimer);
+            entryTimer = setTimeout(() => {
+                isEntering = false;
+            }, 400);
+        });
+
+        tiltCard.addEventListener('mousemove', (e) => {
+            const rect    = tiltCard.getBoundingClientRect();
+            const x       = (e.clientX - rect.left) / rect.width  - 0.5;
+            const y       = (e.clientY - rect.top)  / rect.height - 0.5;
+            const MAX     = 12;
+            const rotateX = -(y * MAX);
+            const rotateY =   x * MAX;
+
+            // Only drop transition after ease-in phase is complete
+            if (!isEntering) {
+                tiltCard.style.transition = 'box-shadow 0.6s ease, border-color 0.6s ease';
+            }
+
+            tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(8px)`;
+            tiltCard.style.boxShadow = `
+                0 0 0 1px rgba(255,255,255,0.06) inset,
+                ${-rotateY * 2}px ${rotateX * 2}px 50px rgba(0,0,0,0.7),
+                0 25px 60px rgba(0,0,0,0.5)
+            `;
+        });
+
+        // Smooth spring back on leave
+        tiltCard.addEventListener('mouseleave', () => {
+            clearTimeout(entryTimer);
+            isEntering = false;
+            tiltCard.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.6s ease';
+            tiltCard.style.transform  = 'rotateX(0deg) rotateY(0deg) translateZ(0px)';
+            tiltCard.style.boxShadow  = '';
+        });
+    }
+    /* -----------------------------------------------
+       CURSOR PROXIMITY GLOW
+    ----------------------------------------------- */
+    const GLOW_RADIUS = 180;
+
+    document.addEventListener('mousemove', (e) => {
+        const rect  = tiltCard.getBoundingClientRect();
+        const relX  = e.clientX - rect.left;
+        const relY  = e.clientY - rect.top;
+        const distX = Math.max(0, Math.max(rect.left - e.clientX, e.clientX - rect.right));
+        const distY = Math.max(0, Math.max(rect.top  - e.clientY, e.clientY - rect.bottom));
+        const dist  = Math.sqrt(distX * distX + distY * distY);
+
+        if (dist < GLOW_RADIUS) {
+            const opacity = (1 - dist / GLOW_RADIUS) * 0.08;
+            tiltCard.style.setProperty('--glow-x',  relX + 'px');
+            tiltCard.style.setProperty('--glow-y',  relY + 'px');
+            tiltCard.style.setProperty('--glow-op', opacity.toFixed(3));
+        } else {
+            tiltCard.style.setProperty('--glow-op', '0');
+        }
+    });
+
+</script>
+</body>
+</html>
